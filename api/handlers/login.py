@@ -3,6 +3,8 @@ from time import mktime
 from tornado.escape import json_decode, utf8
 from tornado.gen import coroutine
 from uuid import uuid4
+from api.handlers.secutils import PassHash, AesEncDBField, AesDecDBField
+import os
 
 from .base import BaseHandler
 
@@ -35,6 +37,7 @@ class LoginHandler(BaseHandler):
             if not isinstance(email, str):
                 raise Exception()
             password = body['password']
+                      
             if not isinstance(password, str):
                 raise Exception()
         except:
@@ -49,18 +52,35 @@ class LoginHandler(BaseHandler):
             self.send_error(400, message='The password is invalid!')
             return
 
+        
+        #retrieve  salt and email. 
         user = yield self.db.users.find_one({
           'email': email
         }, {
-          'password': 1
-        })
+          'email':1, 'password': 1, 'salt':1
+        }
+        )
 
+       
         if user is None:
-            self.send_error(403, message='The email address and password are invalid!')
+            self.send_error(403, message='The email address and invalid!')
             return
 
-        if user['password'] != password:
-            self.send_error(403, message='The email address and password are invalid!')
+       
+        # Retrieve Pepper
+        with open('StoredPepper', 'rb') as binary_file:
+                pepper = binary_file.read()
+
+        # Retrieve keyhash
+        salt = user['salt']
+                     
+        # hash passphrase
+        hashed_pass = PassHash(password, salt, pepper)
+       
+
+         #Task 3: Verify Keyed Hash 
+        if user['password'] != hashed_pass:
+            self.send_error(403, message='The password are invalid!')
             return
 
         token = yield self.generate_token(email)
