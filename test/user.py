@@ -39,7 +39,11 @@ class UserHandlerTest(BaseTest):
 
         self.email = 'test@test.com'
         self.password = 'testPassword'
-        self.display_name = 'testDisplayName'
+        self.display_name = 'Tests'
+        self.full_name = 'Automated Test Framework'
+        self.address = 'none'
+        self.phone_number = 'none'
+        self.disabilities = 'NA'
         self.token = 'testToken'
 
         IOLoop.current().run_sync(self.register)

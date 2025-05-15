@@ -23,7 +23,12 @@ class RegistrationHandlerTest(BaseTest):
         body = {
           'email': email,
           'password': 'testPassword',
-          'displayName': display_name
+          'displayName': 'Tests',
+          'fullName': 'Automated Test Framework',
+          'Address': 'none',
+          'phoneNumber': 'none',
+          'disabilities': 'NA',
+          
         }
 
         response = self.fetch('/registration', method='POST', body=dumps(body))
@@ -50,9 +55,14 @@ class RegistrationHandlerTest(BaseTest):
 
     def test_registration_twice(self):
         body = {
-          'email': 'test@test.com',
+          'email': '@testtest.com',
           'password': 'testPassword',
-          'displayName': 'testDisplayName'
+          'displayName': 'Tests',
+          'fullName': 'Automated Test Framework',
+          'Address': 'none',
+          'phoneNumber': 'none',
+          'disabilities': 'NA',
+          
         }
 
         response = self.fetch('/registration', method='POST', body=dumps(body))

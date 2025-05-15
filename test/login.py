@@ -36,7 +36,8 @@ class LoginHandlerTest(BaseTest):
     def test_login(self):
         body = {
           'email': self.email,
-          'password': self.password
+          'password': self.password,
+          'salt': self.salt
         }
 
         response = self.fetch('/login', method='POST', body=dumps(body))
